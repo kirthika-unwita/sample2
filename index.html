@@ -2,34 +2,41 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Simple HTML Table</title>
+    <title>JSON Viewer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        pre {
+            background: #fff;
+            padding: 15px;
+            border: 1px solid #ddd;
+            overflow-x: auto;
+        }
+    </style>
 </head>
 <body>
 
-<h2>Student Marks Table</h2>
+<h2>JSON File Content</h2>
+<pre id="output">Loading...</pre>
 
-<table border="1" cellpadding="8" cellspacing="0">
-    <tr>
-        <th>Name</th>
-        <th>Subject</th>
-        <th>Marks</th>
-    </tr>
-    <tr>
-        <td>Alice</td>
-        <td>Math</td>
-        <td>85</td>
-    </tr>
-    <tr>
-        <td>Bob</td>
-        <td>Science</td>
-        <td>90</td>
-    </tr>
-    <tr>
-        <td>Charlie</td>
-        <td>English</td>
-        <td>78</td>
-    </tr>
-</table>
+<script>
+fetch('data.json')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        document.getElementById('output').textContent = JSON.stringify(data, null, 4);
+    })
+    .catch(error => {
+        document.getElementById('output').textContent = 'Error loading JSON: ' + error;
+    });
+</script>
 
 </body>
 </html>
