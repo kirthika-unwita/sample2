@@ -2,25 +2,37 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>JSON Viewer</title>
+    <title>JSON Table Viewer</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             padding: 20px;
             background: #f5f5f5;
         }
-        pre {
+        table {
+            border-collapse: collapse;
+            width: 100%;
             background: #fff;
-            padding: 15px;
-            border: 1px solid #ddd;
-            overflow-x: auto;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background: #eee;
         }
     </style>
 </head>
 <body>
 
-<h2>JSON File Content</h2>
-<pre id="output">Loading...</pre>
+<h2>JSON Data Table</h2>
+<table id="dataTable">
+    <thead>
+        <tr id="tableHeader"></tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+</table>
 
 <script>
 fetch('data.json')
@@ -31,10 +43,33 @@ fetch('data.json')
         return response.json();
     })
     .then(data => {
-        document.getElementById('output').textContent = JSON.stringify(data, null, 4);
+        if (!Array.isArray(data)) {
+            data = [data]; // wrap single object into array
+        }
+
+        // Get table header keys
+        const keys = Object.keys(data[0]);
+        const headerRow = document.getElementById('tableHeader');
+        keys.forEach(key => {
+            const th = document.createElement('th');
+            th.textContent = key;
+            headerRow.appendChild(th);
+        });
+
+        // Fill table rows
+        const tableBody = document.getElementById('tableBody');
+        data.forEach(item => {
+            const row = document.createElement('tr');
+            keys.forEach(key => {
+                const td = document.createElement('td');
+                td.textContent = typeof item[key] === 'object' ? JSON.stringify(item[key]) : item[key];
+                row.appendChild(td);
+            });
+            tableBody.appendChild(row);
+        });
     })
     .catch(error => {
-        document.getElementById('output').textContent = 'Error loading JSON: ' + error;
+        document.body.innerHTML += `<p style="color:red">Error loading JSON: ${error}</p>`;
     });
 </script>
 
