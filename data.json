@@ -1,0 +1,12 @@
+{
+  "name": "Alice",
+  "age": 25,
+  "email": "alice@example.com",
+  "skills": ["HTML", "CSS", "JavaScript"],
+  "isActive": true,
+  "address": {
+    "street": "123 Main Street",
+    "city": "Chennai",
+    "country": "India"
+  }
+}
